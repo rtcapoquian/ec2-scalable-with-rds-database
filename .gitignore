@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# VS Code settings
+.vscode/
+
+# Python virtual environments
+env/
+venv/
+ENV/
+
+# Terraform state
+*.tfstate
+*.tfstate.*
+.terraform/
+crash.log
+
+# Output diagrams and images
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Sensitive files
+*.pem
+*.key
+*.env
+terraform.tfvars
+.terraform.lock.hcl
