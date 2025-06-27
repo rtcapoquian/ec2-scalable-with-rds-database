@@ -11,36 +11,34 @@ with Diagram(
     filename="network_todo_architecture",
     outformat="png",
     graph_attr={"fontsize": "18", "fontname": "Arial Bold"},
-    node_attr={"fontsize": "14", "fontname": "Arial Bold"},
+    node_attr={"fontsize": "16", "fontname": "Arial Bold", "style": "filled", "fillcolor": "#e6f0ff", "color": "#222244"},
 ):
-
     # External
     users = Users("Users")
 
     # Internet Gateway (Entry Point)
     igw = InternetGateway("Internet Gateway")
 
-    with Cluster("AWS Region", graph_attr={"fontsize": "18", "fontname": "Arial"}):
-        with Cluster("VPC", graph_attr={"fontsize": "18", "fontname": "Arial"}):
-            # Tier 1 - Load Balancer (Top Tier)
-            with Cluster("Tier 1 - Load Balancer", graph_attr={"fontsize": "18", "fontname": "Arial"}):
+    with Cluster("AWS Region", graph_attr={"fontsize": "18", "fontname": "Arial Bold"}):
+        with Cluster("VPC", graph_attr={"fontsize": "18", "fontname": "Arial Bold"}):
+            with Cluster("Public Subnet", graph_attr={"fontsize": "18", "fontname": "Arial Bold"}):
                 alb = ElbApplicationLoadBalancer("ALB")
                 nat = NATGateway("NAT")
 
-            # Tier 2 - Application Layer (Middle Tier)
-            with Cluster("Tier 2 - Application", graph_attr={"fontsize": "18", "fontname": "Arial"}):
+            with Cluster("Private Subnet", graph_attr={"fontsize": "18", "fontname": "Arial Bold"}):
                 asg = AutoScaling("Auto Scaling")
 
-            # Tier 3 - Database Layer (Bottom Tier)
-            with Cluster("Tier 3 - Database", graph_attr={"fontsize": "18", "fontname": "Arial"}):
-                rds_primary = RDS("Database Primary")
-                rds_standby = RDS("Database Standby")
+            with Cluster("Private Subnet                    ", graph_attr={"fontsize": "18", "fontname": "Arial Bold"}):
+                with Cluster("Subnet1", graph_attr={"fontsize": "18", "fontname": "Arial Bold"}):
+                    rds_primary = RDS("DB Primary")
+                with Cluster("Subnet2", graph_attr={"fontsize": "18", "fontname": "Arial Bold"}):
+                    rds_standby = RDS("DB Standby")
 
     # Traffic Flow - Top to Bottom
-    users >> igw >> alb >> asg >> rds_primary
+    users >> Edge(color="#1f77b4", fontname="Arial Bold", fontsize="14") >> igw >> Edge(color="#1f77b4", fontname="Arial Bold", fontsize="14") >> alb >> Edge(color="#2ca02c", fontname="Arial Bold", fontsize="14") >> asg >> Edge(color="#d62728", fontname="Arial Bold", fontsize="14") >> rds_primary
 
     # Database replication
-    rds_primary >> Edge(label="Sync", style="dashed") >> rds_standby
+    rds_primary >> Edge(label="Sync", style="dashed", color="#9467bd", fontname="Arial Bold", fontsize="14") >> rds_standby
 
     # Outbound internet access
-    asg >> nat >> igw
+    asg >> Edge(color="#ff7f0e", fontname="Arial Bold", fontsize="14") >> nat >> Edge(color="#ff7f0e", fontname="Arial Bold", fontsize="14") >> igw
